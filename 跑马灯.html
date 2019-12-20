@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>跑马灯</title>
+
+	</head>
+	<body>
+		<div id="app">
+			<input type="button" value="跑起来" @click="run">
+			<input type="button" value="停止" @click="stop">
+			<p>{{str}}</p>
+		</div>
+		<script src="js/vue.js"></script>
+		<script>
+			var vm = new Vue({
+				el: '#app',
+				data: {
+					str: '稳住，我们能赢！',
+					time:null
+				},
+				methods: {
+					run() {
+						
+						if(this.time != null){
+							return false
+						}
+						this.time = setInterval(()=>{
+								var star = this.str.substring(0, 1);
+								var end = this.str.substring(1);
+								this.str = end + star;
+							},400);
+							
+					},
+					stop() {
+						clearInterval(this.time);
+						this.time = null;
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
