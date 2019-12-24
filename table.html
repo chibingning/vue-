@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>组件</title>
+		<style>
+			.table {width: 980px;margin: 0 auto;}
+			.table table {width: 100%;}
+			tr {text-align: center;}
+			h3{ background:#f5f5f5; padding:0.2rem; }
+			.control{ margin:10px 0;}
+			input{ margin-left:10px;}
+			label{ margin-left:15px;}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div class="table">
+				<div class="control">
+					<h3>添加品牌</h3>
+					<div>
+						<label for="">id</label>
+						<input type="text" name="" id="" value="" v-model="id"/>
+						<label for="">name</label>
+						<input type="text" name="" id="" value="" v-model="name" @keyup.enter="addHandel"/>
+						<input type="button" value="添加" @click="addHandel"/>
+						<label for="">搜索名称关键字</label>
+						<input type="text" name="" id="" value="" v-model="keywords" v-focus />
+					</div>
+				</div>
+				<table border="" cellspacing="" cellpadding="">
+					<tr>
+						<th>id</th>
+						<th>name</th>
+						<th>ctime</th>
+						<th>操作</th>
+					</tr>
+					<tr v-for="item in search(keywords)" :key="item.id">  <!-- 循环加上key值 -->
+						<td >{{item.id}}</td>
+						<td >{{item.name}}</td>
+						<td >{{item.ctime | format('yyyy-MM-dd')}}</td>
+						<td ><a href="" @click.prevent="del(item.id)">删除</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<script src="js/vue.js"></script>
+		<script>
+			
+			Vue.filter('format',function(value,arg){
+				if(arg == 'yyyy-MM-dd'){
+					var ret = '';
+					ret += value.getFullYear() +'-'+ (value.getMonth()+1) + '-' + value.getDate();
+					return ret
+				}
+				return value;
+			})
+			
+			Vue.directive('focus',{
+				bind:function(el){
+					
+				},
+				inserted:function(el){
+					el.focus()
+				},
+				updated:function(){
+					
+				}
+			})
+			var list = [
+				{ id:1,name:'奔驰',ctime:new Date()},
+				{ id:2,name:'奥迪',ctime:new Date()},
+				]
+			var vm = new Vue({
+				el:'#app',
+				data:{
+					id:'',
+					name:'',
+					keywords:'',
+					list:list
+				},
+				methods:{
+					addHandel(){
+						var car ={id:this.id,name:this.name,ctime:new Date()}
+						this.list.push(car) //push到数组中
+						this.id = this.name = ''
+						
+					},
+					del(id){
+						index = this.list.indexOf(id)  //some/findIndex 查找索引
+						this.list.splice(index,1);
+					},
+					search(keywords){
+						// var newList=[]
+						// this.list.forEach(item=>{
+						// 	if(item.name.indexOf(keywords) != -1){
+						// 		newList.push(item)
+						// 	}
+							
+						// })
+						// return newList
+						
+						var newList = this.list.filter(item=>{
+							if(item.name.includes(keywords)){
+								return item
+							}
+						})
+						
+						return newList
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
